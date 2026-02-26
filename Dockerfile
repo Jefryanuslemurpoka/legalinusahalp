@@ -2,14 +2,26 @@ FROM php:8.4-cli
 
 WORKDIR /var/www
 
-COPY . .
-
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    git unzip libzip-dev zip \
+    git unzip libzip-dev zip curl \
     && docker-php-ext-install zip
 
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
+
+COPY . .
+
+# Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN composer install --optimize-autoloader --no-dev
+
+# Install npm & build assets
+RUN npm install
+RUN npm run build
+
+RUN chmod -R 775 storage bootstrap/cache
 
 CMD php artisan serve --host=0.0.0.0 --port=$PORT
