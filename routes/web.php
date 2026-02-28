@@ -1,11 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('landing.index');
-});
+use Illuminate\Support\Facades\Log;
 
 Route::get('/test', function () {
-    return 'Laravel OK - ' . config('app.env');
+    try {
+        return 'Laravel OK - ' . config('app.env');
+    } catch (\Exception $e) {
+        Log::error($e->getMessage());
+        return $e->getMessage();
+    }
+});
+
+Route::get('/', function () {
+    try {
+        return view('landing.index');
+    } catch (\Exception $e) {
+        Log::error($e->getMessage());
+        return $e->getMessage();
+    }
 });
