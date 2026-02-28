@@ -7,10 +7,6 @@ RUN apt-get update && apt-get install -y \
     git unzip libzip-dev zip curl \
     && docker-php-ext-install zip
 
-# Install Node.js
-RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
-    && apt-get install -y nodejs
-
 COPY . .
 
 # Install composer
@@ -18,12 +14,12 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN composer install --optimize-autoloader --no-dev
 
-# Install npm & build assets
-RUN npm install
-# RUN npm run build
-
 RUN chmod -R 775 storage bootstrap/cache
-RUN php artisan config:cache \
+
+RUN php artisan config:clear \
+    && php artisan route:clear \
+    && php artisan view:clear \
+    && php artisan config:cache \
     && php artisan route:cache \
     && php artisan view:cache
     
