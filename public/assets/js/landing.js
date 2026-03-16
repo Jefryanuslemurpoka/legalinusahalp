@@ -65,13 +65,33 @@ if (form) {
         btn.textContent = 'Mengirim...';
         btn.disabled = true;
 
-        // Simulate sending
-        setTimeout(() => {
-            form.style.display = 'none';
-            formSuccess.style.display = 'block';
-        }, 1200);
-    });
-}
+        const nama = document.getElementById('nama').value;
+        const phone = document.getElementById('phone').value;
+        const email = document.getElementById('email').value;
+        const layanan = document.getElementById('layanan').value;
+        const pesan = document.getElementById('pesan').value;
+
+        const nomorWA = '6288245341601';
+
+        const pesanWA = 
+        `Halo LegalinUsaha, saya ingin konsultasi.
+
+        *Nama:* ${nama}
+        *No. WhatsApp:* ${phone}
+        *Email:* ${email || '-'}
+        *Layanan:* ${layanan}
+        *Pesan:* ${pesan || '-'}`;
+
+                setTimeout(() => {
+                    form.style.display = 'none';
+                    formSuccess.style.display = 'block';
+
+                    setTimeout(() => {
+                        window.open(`https://wa.me/${nomorWA}?text=${encodeURIComponent(pesanWA)}`, '_blank');
+                    }, 800);
+                }, 1200);
+            });
+        }
 
 // ===== ACTIVE NAV LINK =====
 const sections = document.querySelectorAll('section[id]');
